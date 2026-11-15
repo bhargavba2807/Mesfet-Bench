@@ -1,0 +1,14 @@
+{
+  "name": "mesfet-bench",
+  "version": "1.0.0",
+  "description": "Interactive GaAs MESFET simulator — depletion region, I-V family, transconductance and cutoff frequency, re-solved live.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "build": "node tools/build-standalone.mjs",
+    "serve": "python3 -m http.server 8000"
+  },
+  "keywords": ["mesfet", "gaas", "semiconductor", "simulation", "microwave", "education"],
+  "license": "MIT"
+}

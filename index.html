@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MESFET Bench — interactive GaAs MESFET model</title>
+<meta name="description" content="An interactive GaAs MESFET simulator. Re-dimension the device and watch the depletion region, I-V family, transconductance and cutoff frequency re-solve.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="tag">GaAs MESFET · PS-57</div>
+    <h1>MESFET Bench</h1>
+    <div class="sub">A Schottky-gate GaAs MESFET you can re-dimension. Move a slider and the depletion region, the I–V family, the transconductance and the cutoff frequency all re-solve together.</div>
+  </div>
+  <button class="themebtn" id="themebtn" type="button">Theme</button>
+</header>
+
+<div class="bench">
+  <!-- CONTROL RAIL -->
+  <div class="col">
+    <div class="card">
+      <div class="card-h"><h2>Device parameters</h2><span class="note">Fab</span></div>
+      <div class="card-b">
+        <div class="grp">
+          <div class="grp-t">Presets</div>
+          <div class="chips" id="presets"></div>
+        </div>
+        <div class="grp">
+          <div class="grp-t">Geometry &amp; doping</div>
+          <div id="geo"></div>
+        </div>
+        <div class="grp">
+          <div class="grp-t">Material, transport &amp; parasitics</div>
+          <div id="mat"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h2>Bias</h2><span class="note">Operating point</span></div>
+      <div class="card-b">
+        <div id="bias"></div>
+        <div class="grp" style="margin-top:18px">
+          <div class="grp-t">Current model</div>
+          <div class="seg" id="modelseg">
+            <button type="button" data-m="vel" aria-pressed="true">With v<sub>sat</sub></button>
+            <button type="button" data-m="gcm" aria-pressed="false">Gradual channel</button>
+          </div>
+          <p class="segnote" id="modelnote"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN COLUMN -->
+  <div class="col">
+    <div class="card">
+      <div class="card-h"><h2>Cross-section at the operating point</h2><span class="note" id="regimeslot"></span></div>
+      <div class="card-b devbox">
+        <svg class="dev" id="dev" viewBox="0 0 680 330" role="img" aria-label="MESFET cross-section with live depletion region"></svg>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--metal)"></i>Ohmic / Schottky metal</span>
+        <span><i class="sw" style="background:var(--nlayer)"></i>n-GaAs channel (conducting)</span>
+        <span><i class="sw" style="background:var(--depl)"></i>Depletion region (carrier-free)</span>
+        <span><i class="sw" style="background:var(--substrate)"></i>Semi-insulating GaAs substrate</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h2>Computed quantities</h2><span class="note">Live</span></div>
+      <div class="tiles" id="tiles"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h2>Output characteristics</h2><span class="note">I<sub>DS</sub> vs V<sub>DS</sub></span></div>
+      <div class="card-b tight"><div class="chartwrap"><canvas id="c1"></canvas></div></div>
+      <div class="ck" id="k1"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h2 id="c2title">Transfer characteristic</h2>
+        <span class="note">Swept over V<sub>GS</sub></span>
+      </div>
+      <div class="card-b tight2">
+        <div class="seg segwide" id="c2seg">
+          <button type="button" data-v="id" aria-pressed="true">I<sub>DS</sub>–V<sub>GS</sub></button>
+          <button type="button" data-v="gm" aria-pressed="false">g<sub>m</sub></button>
+          <button type="button" data-v="ft" aria-pressed="false">f<sub>T</sub></button>
+        </div>
+        <div class="chartwrap"><canvas id="c2"></canvas></div>
+      </div>
+      <div class="ck" id="k2"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h2>Derivation with your numbers</h2><span class="note">Substituted</span></div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  Gradual-channel current follows the Shockley JFET solution with the Schottky built-in potential in place of a junction built-in voltage. Velocity saturation is applied as a source-end current ceiling, <code>I = qN_D·v_sat·Z·(a − W_s)</code>, which is where the 0.5 µm figures stop agreeing with the long-channel algebra. Series resistances are solved self-consistently, so R<sub>s</sub> both pushes the knee out and degrades g<sub>m</sub> by <code>1/(1 + g_m·R_s)</code>. Set them to zero and the knee collapses to about E<sub>c</sub>L ≈ 0.1 V — the intrinsic channel really does saturate that fast, and almost all of a measured knee voltage is parasitic. Gate forward conduction above roughly +0.6 V, substrate leakage, impact ionization and the velocity overshoot peculiar to GaAs are left out.
+  <span class="src"><a href="https://github.com/YOUR-USERNAME/mesfet-bench">Source on GitHub</a></span>
+</div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
