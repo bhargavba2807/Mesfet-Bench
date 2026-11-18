@@ -12,21 +12,26 @@
   color-scheme: light;
 
   /* --- surfaces ------------------------------------------------------- */
-  --bg:#EAEEF4;
-  --bg-2:#F4F7FA;
+  --bg:#EB8B3C;
+  --bg-2:#F8B274;
   --surface:#FFFFFF;
-  --surface-2:#E2E8F0;
-  --inset:#F5F8FC;
+  --surface-2:#F1E7DC;
+  --inset:#FDF8F3;
   --glass:rgba(255,255,255,.72);
-  --grid:rgba(19,26,34,.055);
-  --track:#D3DAE4;
+  --grid:rgba(74,30,0,.10);
+  --track:#E0D5C9;
 
   /* --- ink ------------------------------------------------------------ */
-  --fg:#101620;
-  --muted:#54606F;
-  --faint:#8491A1;
-  --line:#C6CFDB;
-  --line-soft:#E1E7EF;
+  --fg:#1A1410;
+  --muted:#5A4C40;
+  --faint:#8A7A6C;
+  --line:#DACEC2;
+  --line-soft:#EDE4DA;
+
+  /* --- text sitting directly on the orange page ground ---------------- */
+  --on-bg:#2B1A0A;
+  --on-bg-muted:#54381B;
+  --on-bg-accent:#7A2E04;
 
   /* --- accents -------------------------------------------------------- */
   --accent:#9A5407;
@@ -68,20 +73,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:#0B0F15;
-    --bg-2:#0E131A;
-    --surface:#151B24;
-    --surface-2:#1C242F;
-    --inset:#10161E;
-    --glass:rgba(21,27,36,.72);
-    --grid:rgba(150,180,220,.055);
-    --track:#273140;
+    --bg:#3D1E0A;
+    --bg-2:#63320F;
+    --surface:#1A1611;
+    --surface-2:#262018;
+    --inset:#15110D;
+    --glass:rgba(26,22,17,.72);
+    --grid:rgba(255,170,90,.075);
+    --track:#3A2F24;
 
-    --fg:#E6EBF3;
-    --muted:#99A5B5;
-    --faint:#6B7889;
-    --line:#2A3441;
-    --line-soft:#212A35;
+    --fg:#F2E8DC;
+    --muted:#B3A496;
+    --faint:#86786A;
+    --line:#3A2F25;
+    --line-soft:#2C241C;
+
+    --on-bg:#F7E6D3;
+    --on-bg-muted:#D6BCA0;
+    --on-bg-accent:#FFBE6E;
 
     --accent:#F0A74C;
     --accent-ink:#F7C27E;
@@ -90,8 +99,8 @@
     --accent2:#8CA0F0;
     --accent2-wash:rgba(140,160,240,.12);
 
-    --metal:#6F7B8B;      --metal-2:#8A95A4;
-    --substrate:#242D39;  --substrate-2:#2E3846;
+    --metal:#7A7368;      --metal-2:#948C80;
+    --substrate:#2B2319;  --substrate-2:#3A3025;
     --nlayer:#6E5728;     --nlayer-2:#8A6E35;
     --depl:#4C5789;
 
@@ -113,20 +122,24 @@
 }
 
 :root[data-theme="dark"] {
-  --bg:#0B0F15;
-  --bg-2:#0E131A;
-  --surface:#151B24;
-  --surface-2:#1C242F;
-  --inset:#10161E;
-  --glass:rgba(21,27,36,.72);
-  --grid:rgba(150,180,220,.055);
-  --track:#273140;
+  --bg:#3D1E0A;
+  --bg-2:#63320F;
+  --surface:#1A1611;
+  --surface-2:#262018;
+  --inset:#15110D;
+  --glass:rgba(26,22,17,.72);
+  --grid:rgba(255,170,90,.075);
+  --track:#3A2F24;
 
-  --fg:#E6EBF3;
-  --muted:#99A5B5;
-  --faint:#6B7889;
-  --line:#2A3441;
-  --line-soft:#212A35;
+  --fg:#F2E8DC;
+  --muted:#B3A496;
+  --faint:#86786A;
+  --line:#3A2F25;
+  --line-soft:#2C241C;
+
+  --on-bg:#F7E6D3;
+  --on-bg-muted:#D6BCA0;
+  --on-bg-accent:#FFBE6E;
 
   --accent:#F0A74C;
   --accent-ink:#F7C27E;
@@ -135,8 +148,8 @@
   --accent2:#8CA0F0;
   --accent2-wash:rgba(140,160,240,.12);
 
-  --metal:#6F7B8B;      --metal-2:#8A95A4;
-  --substrate:#242D39;  --substrate-2:#2E3846;
+  --metal:#7A7368;      --metal-2:#948C80;
+  --substrate:#2B2319;  --substrate-2:#3A3025;
   --nlayer:#6E5728;     --nlayer-2:#8A6E35;
   --depl:#4C5789;
 
@@ -512,4 +525,41 @@ canvas { display: block; width: 100%; height: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+}
+
+
+/* ==========================================================================
+   Orange page ground + team credits
+   Cards stay neutral so the charts and readouts keep their contrast; only the
+   page behind them turns orange. The rules below recolour the handful of
+   elements that sit directly on that ground, using the --on-bg-* tokens.
+   ========================================================================== */
+
+.tag { color: var(--on-bg-accent); }
+.tag::before { background: var(--on-bg-accent); }
+h1 { color: var(--on-bg); }
+.sub { color: var(--on-bg-muted); }
+
+header { border-bottom-color: color-mix(in srgb, var(--on-bg) 28%, transparent); }
+header::after { background: var(--on-bg-accent); }
+
+.foot { color: var(--on-bg-muted); border-top-color: color-mix(in srgb, var(--on-bg) 28%, transparent); }
+.foot a { color: var(--on-bg-accent); text-decoration-color: color-mix(in srgb, var(--on-bg-accent) 45%, transparent); }
+.foot code { background: var(--surface); color: var(--muted); border: 1px solid var(--line); }
+
+/* ---------------- team credits ---------------- */
+.team {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 8px; margin-top: 18px;
+}
+.team-label {
+  font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--on-bg-muted); margin-right: 2px;
+}
+.member {
+  font-size: 12.5px; font-weight: 500; color: var(--fg);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 999px; padding: 6px 13px;
+  box-shadow: var(--shadow); white-space: nowrap;
 }
